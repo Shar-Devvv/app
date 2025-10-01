@@ -1,10 +1,9 @@
 "use client"
 import React from 'react';
 import { notFound } from 'next/navigation';
-
-// 🎯 CRITICAL FIX: The exported function is called getPostsByCategorySlug, not getPostBySlug.
-// We must use the correct name to fix the build error.
-import { getPostsByCategorySlug } from '@/app/data/posts';
+// 🎯 CRITICAL: This path goes up two directories (out of [slug], out of posts) 
+// to reach the 'data' folder at the root level.
+import { getPostBySlug } from '@/app/data/posts';
 
 // Components you mentioned
 import Blogs from '@/public/components/Blogs';
@@ -15,19 +14,16 @@ const PostPage = ({ params }) => {
     const postSlug = params.slug;
 
     // 1. Fetch the specific post data using the slug
-    // NOTE: This assumes that getPostsByCategorySlug can act as a lookup 
-    // or that you temporarily want to use it here. This line fixes the build error.
-    const postsData = getPostsByCategorySlug(postSlug); 
+    const postData = getPostBySlug(postSlug);
 
-    // 2. We need to find the specific post you are looking for
-    const postData = postsData[0] || null; // Assume the first result is the post or category match
-
-    // 3. Handle post not found 
+    // 2. Handle post not found (If the slug doesn't match a post, this runs)
     if (!postData) {
+        // If postData is undefined (due to wrong slug or path error), 
+        // this will show a Next.js 404 page, which is good for debugging.
         return notFound();
     }
     
-    // 4. Render the page
+    // 3. Render the page
     return (
         <div className="min-h-screen bg-white">
             <Top title={postData.title} category={postData.category} /> 
