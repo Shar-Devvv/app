@@ -2,6 +2,7 @@
 
 import connectDb from "@/app/db/connectDb";
 import Post from "@/app/db/models/Post"; // Assuming this is your Mongoose model
+import { getPostsByCategorySlug } from '@/app/data/posts';
 
 export async function getPostsByCategorySlug(slug) {
     try {
